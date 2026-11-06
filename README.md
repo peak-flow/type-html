@@ -40,7 +40,7 @@ Browser-side sanitation protects this preview; a future Laravel integration must
 
 ## Laravel example
 
-`examples/laravel/` shows the Tiptap editor inside a Blade form, with the HTML sanitized on the server by HTMLPurifier and saved to an `alerts` table through Eloquent. See [examples/laravel/README.md](examples/laravel/README.md).
+[examples/laravel/README.md](examples/laravel/README.md) is a step-by-step guide to using either editor (Tiptap or custom Alpine) in a Laravel Blade form, from installation through migration, routes, and controller, with the HTML sanitized on the server by HTMLPurifier and saved to an `alerts` table through Eloquent.
 
 ## Editing the demo
 
