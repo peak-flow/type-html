@@ -34,9 +34,20 @@ php artisan migrate
 
 Add `resources/js/alert-editor.js` to the `input` array in `vite.config.js`, then run `npm run dev` and open `/alerts/create`.
 
+## Using the custom Alpine editor instead of Tiptap
+
+`resources/js/alert-editor-alpine.js` wraps this repo's handmade engine (`src/custom-editor.js`) in the same `alertEditor` component, with the same `body`, `toggle()`, and `addLink()`. The Blade form, controller, model, migration, and purifier profile do not change.
+
+1. Copy `src/custom-editor.js` from the repo root to `resources/js/custom-editor.js` in your Laravel app.
+2. Copy `examples/laravel/resources/js/alert-editor-alpine.js` to `resources/js/`.
+3. In `alerts/form.blade.php`, change `@vite(['resources/js/alert-editor.js'])` to `@vite(['resources/js/alert-editor-alpine.js'])`, and list that file in `vite.config.js`.
+4. Only `alpinejs` is needed from npm; skip the two `@tiptap/*` packages.
+
+The custom engine is the smaller bundle but the prototype limits in the main README apply: bold, italic, and links need a text selection, list toggles affect the whole list, and undo is snapshot-based. The wrapper adds the plain-text paste and drop blocking that the demo page normally provides.
+
 ## Notes
 
-- **Livewire apps:** Livewire 3+ already starts Alpine. Delete the last two lines of `alert-editor.js` (`window.Alpine = Alpine; Alpine.start();`) and keep the rest.
-- **Empty messages:** an empty Tiptap document serializes as `<p></p>`. The component sends `''` instead, so `required` fails. The controller also rejects HTML that purifies down to nothing.
-- **Custom Alpine editor:** to use this repo's custom engine instead of Tiptap, swap the `Editor` setup for `src/custom-editor.js`. The form, hidden input, controller, and purifier profile stay the same.
+- **Livewire apps:** Livewire 3+ already starts Alpine. Delete the last two lines (`window.Alpine = Alpine; Alpine.start();`) of whichever editor file you use and keep the rest.
+- **Empty messages:** an emptied editor still serializes leftover markup (`<p></p>` in Tiptap, `<br>` in the custom engine). Both components send `''` instead, so `required` fails. The controller also rejects HTML that purifies down to nothing.
+- **Custom vs Tiptap:** pick one per page. Both files register `alertEditor`, so loading both would make the second one win.
 - **Styling and auth** are left out to keep the example focused. Add your layout, CSS, and authorization (for example, a policy on `Alert`).
