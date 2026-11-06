@@ -1,0 +1,12 @@
+{
+  "alpine": {
+    "rawBytes": 99069,
+    "gzipBytes": 36269,
+    "version": "Alpine 3.17.5"
+  },
+  "tiptap": {
+    "rawBytes": 487597,
+    "gzipBytes": 159075,
+    "version": "Tiptap 3.33.0"
+  }
+}

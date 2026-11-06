@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A small, local test bench for a custom Alpine rich-text editor and Tiptap.">
+  <title>Type / HTML — Editor test bench</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="app.css">
+  <script src="assets/compare.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="index.html">type<span>/</span>html <small>EDITOR TEST BENCH</small></a>
+      <nav class="nav" aria-label="Main navigation"><a href="alpine.html">Alpine editor ↗</a><a href="tiptap.html">Tiptap editor ↗</a></nav>
+    </header>
+    <main>
+      <section class="hero compare-hero">
+        <div><p class="eyebrow"><span class="status-dot"></span> SMALL TOOL. FAIR COMPARISON.</p><h1>Two ways to<br>write an alert.</h1></div>
+        <div class="hero-copy"><p class="lede">One editor built by hand with Alpine. One built with Tiptap. Same toolbar, same content, real timings from your browser.</p><p class="muted">No Laravel. No server round trips. Just open a page and try it.</p></div>
+      </section>
+
+      <section class="editor-options" aria-label="Choose an editor">
+        <a class="option-card" href="alpine.html"><span class="option-number">01</span><div><p class="eyebrow">THE CUSTOM ROUTE</p><h2>Alpine + native editing</h2><p>A small, handwritten editor using the browser’s Selection and Range APIs. Less to download; more behavior to maintain.</p><span class="text-link">Try the Alpine editor <span aria-hidden="true">↗</span></span></div><span class="tag">HANDMADE</span></a>
+        <a class="option-card package-card" href="tiptap.html"><span class="option-number">02</span><div><p class="eyebrow">THE PACKAGE ROUTE</p><h2>Tiptap + StarterKit</h2><p>A document model, editing commands, and undo history supplied by a maintained editor package. The same simple interface.</p><span class="text-link">Try the Tiptap editor <span aria-hidden="true">↗</span></span></div><span class="tag">NPM PACKAGE</span></a>
+      </section>
+
+      <section class="panel comparison-panel" aria-labelledby="comparison-title">
+        <div class="section-heading"><div><p class="eyebrow">LESS GUESSING, MORE MEASURING</p><h2 id="comparison-title">Put them on the clock.</h2><p class="muted">Run the same short alert through both editors. Lower times mean less work for the browser.</p></div><button class="button" id="run-comparison" type="button">Run comparison <span aria-hidden="true">→</span></button></div>
+        <p class="run-status" id="comparison-status" role="status" aria-live="polite">No measurements yet. Open an editor or run the comparison.</p>
+        <div class="table-scroll"><table class="comparison-table"><thead><tr><th scope="col">Operation <small>MEDIAN / MILLISECONDS</small></th><th scope="col">Alpine custom <small>HANDMADE</small></th><th scope="col">Tiptap <small>PACKAGE</small></th></tr></thead><tbody id="comparison-body">
+          <tr><th scope="row">Set up editor</th><td>—</td><td>—</td></tr><tr><th scope="row">Load HTML + layout</th><td>—</td><td>—</td></tr><tr><th scope="row">Format selection + layout</th><td>—</td><td>—</td></tr><tr><th scope="row">Read HTML</th><td>—</td><td>—</td></tr><tr><th scope="row">Sanitize + preview + layout</th><td>—</td><td>—</td></tr><tr><th scope="row">Sanitize + save browser draft</th><td>—</td><td>—</td></tr><tr class="bundle-row"><th scope="row">JavaScript download <small>GZIP / ALL PAGE DEPENDENCIES</small></th><td>—</td><td>—</td></tr>
+        </tbody></table></div>
+        <div class="method-note"><strong>What these numbers mean</strong><p>Each operation uses 15 measured runs after 3 warmups. The automatic comparison uses the same short fixture, one editor at a time, and alternates which runs first. Hover over a timing for its 95th percentile.</p><p>These are warm-cache browser operations, not backend or network benchmarks. Sub-millisecond differences are noisy. Startup download and script parsing are excluded from the operation timings; each editor page shows its own page-ready time. More features also mean more work, so speed alone is not a quality score.</p></div>
+      </section>
+
+      <section class="footnotes"><div><p class="eyebrow">SAME BASELINE</p><p>Bold, italic, heading, lists, links, undo / redo, plain-text paste, sanitized preview, and drafts saved in this browser. Images and file uploads are outside this small demo.</p></div><div><p class="eyebrow">WHY TIPTAP?</p><p><a href="https://api.npmjs.org/downloads/point/2026-10-29:2026-11-04/@tiptap/core" target="_blank" rel="noopener noreferrer">@tiptap/core had 35.1m weekly npm downloads</a> for Oct 29–Nov 4, 2026, the highest of the six checked: Tiptap, Quill, Lexical, Slate, TinyMCE, and Trix. Downloads include dependency installs; they are not a count of active users.</p></div></section>
+    </main>
+    <footer class="site-footer"><span>type / html</span><span>A local playground for Connect alert editing.</span></footer>
+  </div>
+</body>
+</html>

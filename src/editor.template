@@ -1,0 +1,118 @@
+<!doctype html>
+<!-- Source template. build.mjs generates alpine.html and tiptap.html. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>__NAME__ · Type / HTML</title>
+  <script>window.PAGE_STARTED = performance.now();</script>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="app.css">
+  <script defer src="assets/meta.js"></script>
+  <script defer src="assets/__KIND__.js"></script>
+</head>
+<body>
+<main class="shell" x-data="editorDemo">
+  <header class="topbar">
+    <a class="brand" href="index.html">type <span>/</span> html<span class="tag">EDITOR LAB</span></a>
+    <nav class="nav" aria-label="Editor navigation">
+      <a href="index.html">Compare</a>
+      <a href="alpine.html" __ALPINE_CURRENT__>Custom Alpine</a>
+      <a href="tiptap.html" __TIPTAP_CURRENT__>Tiptap</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow">__NUMBER__ / __NAME__</p>
+    <h1 x-text="title">__TITLE__</h1>
+    <p class="lede">__DESCRIPTION__</p>
+  </section>
+
+  <div class="editor-layout">
+    <section>
+      <article class="editor-card" :aria-busy="busy">
+        <div class="card-heading"><div><span class="eyebrow">COMPOSE AN ALERT</span><h2>Your message, nicely put.</h2></div><span class="tag">__NAME__</span></div>
+        <div class="toolbar" role="toolbar" aria-label="Message formatting">
+          <button type="button" class="tool" aria-label="Bold" title="Bold (Ctrl/Cmd+B)" @mousedown.prevent @click="action('bold')" :disabled="busy"><strong>B</strong></button>
+          <button type="button" class="tool" aria-label="Italic" title="Italic (Ctrl/Cmd+I)" @mousedown.prevent @click="action('italic')" :disabled="busy"><em>I</em></button>
+          <button type="button" class="tool" aria-label="Heading" title="Toggle heading" @mousedown.prevent @click="action('heading')" :disabled="busy">H₂</button>
+          <span class="divider" aria-hidden="true"></span>
+          <button type="button" class="tool" aria-label="Bullet list" title="Bullet list" @mousedown.prevent @click="action('bulletList')" :disabled="busy">• List</button>
+          <button type="button" class="tool" aria-label="Numbered list" title="Numbered list" @mousedown.prevent @click="action('orderedList')" :disabled="busy">1. List</button>
+          <button x-ref="linkButton" type="button" class="tool" aria-label="Add link" title="Add link to selected text" @mousedown.prevent @click="openLink()" :disabled="busy">↗ Link</button>
+          <span class="divider" aria-hidden="true"></span>
+          <button type="button" class="tool" aria-label="Undo" title="Undo (Ctrl/Cmd+Z)" @mousedown.prevent @click="action('undo')" :disabled="busy">↶</button>
+          <button type="button" class="tool" aria-label="Redo" title="Redo (Ctrl/Cmd+Shift+Z)" @mousedown.prevent @click="action('redo')" :disabled="busy">↷</button>
+        </div>
+        <div class="editor-surface">
+          <div x-ref="editor" class="editor-content" data-testid="editor-host" role="textbox" aria-label="Alert message" aria-multiline="true" spellcheck="true"></div>
+        </div>
+        <div class="editor-footer"><span><span x-text="chars">0</span> characters</span><span>Plain-text paste · No images</span></div>
+        <div class="action-bar">
+          <div><button type="button" class="button" @click="save()" :disabled="busy">Save draft <span aria-hidden="true">↗</span></button> <button type="button" class="button button-secondary" @click="preview()" :disabled="busy">Preview</button></div>
+          <button type="button" class="button button-quiet" @click="toggleSource()" :disabled="busy">&lt;/&gt; HTML</button>
+        </div>
+      </article>
+      <p class="status" role="status" x-text="status">Loading editor…</p>
+      <div class="action-bar" style="padding: 0 0 24px">
+        <button type="button" class="button button-quiet" @click="loadSample()" :disabled="busy">Reset to sample</button>
+        <button type="button" class="button button-quiet" @click="download()" :disabled="busy">Download HTML ↓</button>
+      </div>
+
+      <section class="panel preview-panel" x-cloak x-show="previewOpen">
+        <div class="panel-heading"><h2>What readers see</h2><button type="button" class="button button-quiet" @click="previewOpen = false" aria-label="Close preview">Close ×</button></div>
+        <div x-ref="preview" class="editor-content" x-html="previewHTML"></div>
+      </section>
+      <section class="panel source-panel" x-cloak x-show="sourceOpen">
+        <div class="panel-heading"><h2>Generated HTML</h2><span class="tag">BEFORE SANITIZING</span></div>
+        <pre x-text="sourceHTML"></pre>
+        <p class="muted">Preview, save, and download all sanitize this HTML first.</p>
+      </section>
+      <section class="panel" x-cloak x-show="report">
+        <div class="panel-heading"><h2>Your benchmark</h2><button type="button" class="button button-quiet" @click="exportReport()">Export JSON ↓</button></div>
+        <p class="muted" x-text="report ? `${report.iterations} measured runs · ${report.warmups} warmups · ${report.inputBytes.toLocaleString()} input bytes · ${report.size} alert` : ''"></p>
+        <div style="overflow:auto"><table class="report-table">
+          <thead><tr><th scope="col">Operation</th><th scope="col">Median</th><th scope="col">95th percentile</th></tr></thead>
+          <tbody><template x-for="[key, label] in Object.entries({setup:'Create editor',load:'Load HTML + layout',format:'Bold + layout',serialize:'Generate HTML',preview:'Sanitize + preview + layout',save:'Sanitize + browser save'})" :key="key"><tr><th scope="row" x-text="label"></th><td x-text="ms(report?.metrics[key]?.median)"></td><td x-text="ms(report?.metrics[key]?.p95)"></td></tr></template></tbody>
+        </table></div>
+        <p class="muted" x-show="report && !report.storageAvailable">Browser storage is unavailable; save timings are omitted.</p>
+      </section>
+    </section>
+
+    <aside class="sidebar">
+      <section class="panel">
+        <p class="eyebrow">UNDER THE HOOD</p><h2>Small actions. Real timings.</h2>
+        <div class="stat-grid">
+          <div class="stat"><span class="stat-label">Editor setup</span><span class="stat-value" x-text="ms(initMs)">—</span></div>
+          <div class="stat"><span class="stat-label">Page ready¹</span><span class="stat-value" x-text="ms(readyMs)">—</span></div>
+          <div class="stat"><span class="stat-label">Last format action</span><span class="stat-value" x-text="ms(actionMs)">—</span></div>
+          <div class="stat"><span class="stat-label">Input → next frame²</span><span class="stat-value" x-text="ms(latency)">—</span></div>
+          <div class="stat"><span class="stat-label">Last preview</span><span class="stat-value" x-text="ms(previewMs)">—</span></div>
+          <div class="stat"><span class="stat-label">Last draft save</span><span class="stat-value" x-text="ms(saveMs)">—</span></div>
+        </div>
+        <p class="muted">¹ From the first head script through editor setup and two animation frames. Includes local asset loading.<br>² A frame scheduling estimate, not a measurement of actual paint.</p>
+      </section>
+      <section class="panel">
+        <p class="eyebrow">PUT IT THROUGH ITS PACES</p><h2>Run a repeatable test.</h2>
+        <p class="muted">15 measured runs after 3 warmups. A separate editor keeps your draft intact.</p>
+        <div class="benchmark-controls">
+          <label for="sample-size">Sample alert</label>
+          <select id="sample-size" x-model="size" :disabled="busy"><option value="short">Short · 6 paragraphs</option><option value="medium">Medium · 60 paragraphs</option><option value="long">Long · 300 paragraphs</option></select>
+          <button type="button" class="button" @click="runBenchmark()" :disabled="busy" x-text="busy ? 'Measuring…' : 'Run benchmark →'">Run benchmark →</button>
+          <p class="muted" role="status" x-text="progress"></p>
+        </div>
+      </section>
+      <section class="notice"><p class="eyebrow">THE FAIR COMPARISON</p><p>Both pages use Alpine for the interface and DOMPurify for sanitizing. Only the editing engine changes.</p><p class="muted" x-text="bundle ? `Page JS: ${(bundle.rawBytes / 1024).toFixed(1)} KB minified / ${(bundle.gzipBytes / 1024).toFixed(1)} KB gzip. Includes interface + sanitizer. Engine: ${bundle.version}.` : ''"></p><p class="muted">__LIMITATION__</p></section>
+    </aside>
+  </div>
+  <footer class="muted" style="padding: 32px 0">Local browser demo. No server requests, no database, no Livewire. Browser saving is synchronous local storage, not a server save.</footer>
+
+  <div class="link-dialog" x-cloak x-show="linkOpen" @keydown.escape.window="if (linkOpen) closeLink()" @click.self="closeLink()">
+    <section class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="link-title" @keydown.tab="const fields = [...$el.querySelectorAll('input,button')]; if ($event.shiftKey && document.activeElement === fields[0]) { $event.preventDefault(); fields.at(-1).focus(); } else if (!$event.shiftKey && document.activeElement === fields.at(-1)) { $event.preventDefault(); fields[0].focus(); }">
+      <p class="eyebrow">A LITTLE MORE CONTEXT</p><h2 id="link-title">Add a link</h2>
+      <form @submit.prevent="addLink()"><label class="field" for="link-url">Website or email address<input x-ref="linkInput" id="link-url" type="text" x-model="linkURL" placeholder="https://example.com" aria-describedby="link-error"></label><p id="link-error" class="muted" role="alert" x-text="linkError"></p><div class="action-bar"><button type="button" class="button button-secondary" @click="closeLink()">Cancel</button><button type="submit" class="button">Add link</button></div></form>
+    </section>
+  </div>
+</main>
+</body>
+</html>

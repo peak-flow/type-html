@@ -1,0 +1,21 @@
+{
+  "name": "type-html",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone Alpine vs Tiptap alert editor comparison",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node tests/browser.mjs"
+  },
+  "dependencies": {
+    "alpinejs": "^3.15.0",
+    "dompurify": "^3.3.0",
+    "@tiptap/core": "^3.0.0",
+    "@tiptap/starter-kit": "^3.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "playwright": "^1.56.0"
+  }
+}
