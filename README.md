@@ -38,6 +38,10 @@ This is a **browser demo**, not a complete production editor. The custom version
 
 Browser-side sanitation protects this preview; a future Laravel integration must sanitize independently on the server before storing and displaying content. Browser storage is per origin, may be unavailable on `file://` or in privacy modes, and is neither shared with other users nor appropriate for confidential patient information.
 
+## Laravel example
+
+`examples/laravel/` shows the Tiptap editor inside a Blade form, with the HTML sanitized on the server by HTMLPurifier and saved to an `alerts` table through Eloquent. See [examples/laravel/README.md](examples/laravel/README.md).
+
 ## Editing the demo
 
 ```sh
